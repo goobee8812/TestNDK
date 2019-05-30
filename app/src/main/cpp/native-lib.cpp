@@ -1,6 +1,10 @@
 #include <jni.h>
 #include <string>
+#include <android/log.h>
 #include "stereo_interface.h"
+
+#define LOG_TAG  "C_TAG"
+#define LOGD(...)  __android_log_print(ANDROID_LOG_DEBUG, LOG_TAG, __VA_ARGS__)
 
 extern "C" JNIEXPORT jstring JNICALL
 Java_com_example_testndk_JniTest_goobeeStringFromJNI(
@@ -47,6 +51,11 @@ Java_com_example_testndk_JniTest_stereoInterface(
     env->GetByteArrayRegion(right, 0, len_arr, c_right_array);
     unsigned char* rightBuf = (unsigned char*)c_right_array;
 
+    LOGD("printf log 255508 = %d",rightBuf[255508]);
+    LOGD("printf log 255509 = %d",rightBuf[255509]);
+    LOGD("printf log 255510 = %d",rightBuf[255510]);
+    LOGD("printf log 255511 = %d",rightBuf[255511]);
+
     env->GetByteArrayRegion(left, 0, len_arr, c_left_array);
     unsigned char* leftBuf = (unsigned char*)c_left_array;
 
@@ -69,7 +78,7 @@ Java_com_example_testndk_JniTest_stereoInterface(
     s.height = height;
 
     jint result = stereo_interface(rightBuf,leftBuf,depthBuf,s);
-    env->SetFloatArrayRegion(depth,0,len_float_arr,c_float_array);
+    env->SetFloatArrayRegion(depth,0,len_float_arr,c_float_array);  //设置输出值
 
     free(c_right_array);
     free(c_left_array);
