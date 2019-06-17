@@ -108,7 +108,8 @@ public class MainActivity extends AppCompatActivity {
 //            InputStream is =getResources().getAssets().open("hello.jpg");
         InputStream is = null;
         try {
-            is = getResources().getAssets().open("test.bmp");
+//            is = getResources().getAssets().open("test.bmp");
+            is = getResources().getAssets().open("hello.bmp");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -155,8 +156,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "onCreate:系统时间：enter " + System.currentTimeMillis());
-                imageView.setImageBitmap(getImage(nowMat));
-//                imageView.setImageBitmap(getImage(bitmap));
+//                imageView.setImageBitmap(getImage(nowMat));
+                imageView.setImageBitmap(getImage(bitmap));
                 Log.d(TAG, "onCreate:系统时间：finish " + System.currentTimeMillis());
 
 //                Mat mat = new Mat(2,2,CvType.CV_8UC3);
@@ -474,10 +475,9 @@ public class MainActivity extends AppCompatActivity {
 
 
     public Bitmap getImage(Bitmap srcBitmap) {
-
         Mat src = new Mat(srcBitmap.getHeight(), srcBitmap.getWidth(), CvType.CV_8UC4);
         Utils.bitmapToMat(srcBitmap, src);
-
+        Imgproc.cvtColor(src,src,Imgproc.COLOR_RGB2GRAY);
 
         Mat grayMat = new Mat();
         //缩放
@@ -495,16 +495,19 @@ public class MainActivity extends AppCompatActivity {
 
 //        Imgcodecs.imwrite(Environment.getExternalStorageDirectory().getAbsolutePath()
 //                + "/erweima16/Test_" + System.currentTimeMillis() + ".jpg",grayMat);
+        double[] d = grayMat.get(90,340);
+        Log.d(TAG, "getImage: double :" + d.length);
 
         byte[] nowImg = new byte[grayMat.width() * grayMat.height()];
         grayMat.get(0, 0, nowImg);
+        Log.d(TAG, "getImage: double : " + nowImg[36340] + "--" + nowImg[36341]);
+
 
         float[] depthImg = new float[grayMat.width() * grayMat.height()];
 
 
-//        LogUtil.d("--" + MyApplication.getBaseImgResizeData().length + "--" + nowImg.length + "--" + depthImg.length);
 //        int result = JniTest.stereoInterface(nowImg, nowImg, depthImg, 0, 0, 400, 640);
-        int result = JniTest.stereoInterface(baseImgResizeData, baseImgResizeData, depthImg, 0, 0, 400, 640);
+        int result = JniTest.stereoInterface(baseImgResizeData, nowImg, depthImg, 0, 0, 400, 640);
 
 //        LogUtil.d("返回结果是：" + result);
         Log.d(TAG, "返回结果是：" + result);
@@ -529,7 +532,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        Imgproc.cvtColor(mat, mat, Imgproc.COLOR_HSV2BGR);
+        Imgproc.cvtColor(mat, mat, Imgproc.COLOR_HSV2RGB);
         mat.convertTo(mat, CvType.CV_8UC4);
 
 
