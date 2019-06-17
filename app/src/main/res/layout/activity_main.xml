@@ -29,7 +29,14 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="match_parent"
-            android:scaleType="fitCenter"
+            android:scaleType="center"
+            />
+        <ImageView
+            android:id="@+id/id_img3_iv"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:scaleType="center"
             />
     </LinearLayout>
 

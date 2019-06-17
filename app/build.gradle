@@ -17,9 +17,10 @@ android {
         }
     }
     buildTypes {
-        debug{
+        debug {
             minifyEnabled false
             ndk {
+                ldLibs "log", "z", "m"
                 abiFilters "arm64-v8a"
             }
         }
