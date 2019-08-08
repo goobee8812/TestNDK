@@ -20,14 +20,6 @@ int stereo_interface(
         faceRectIn &rectIn //人脸框的位置大小，会只输出该框的测距结果
 );
 
-//测距的接口
-int stereo_interface(
-        unsigned char *Right, //输入的参考底图
-        unsigned char *Left,  //输入的实时人脸图
-        float* depth, //输出的测距结果
-        faceRectIn& rectIn, //人脸框的位置大小，会只输出该框的测距结果
-        bool isShort //是否短基线（15mm）
-);
 
 //温度漂移的接口
 void temper_warp_interface(

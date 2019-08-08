@@ -22,10 +22,11 @@ Java_com_example_testndk_JniTest_stereoInterface(
         jbyteArray right,
         jbyteArray left,
         jfloatArray depth,
-        jint x,
-        jint y,
-        jint width,
-        jint height) {
+//        jint x,
+//        jint y,
+//        jint width,
+//        jint height,
+        jobject faceobj) {
 
     jbyte *c_right_array;
     jbyte *c_left_array;
@@ -59,6 +60,18 @@ Java_com_example_testndk_JniTest_stereoInterface(
     env->GetFloatArrayRegion(depth, 0, len_arr, c_float_array);
     float *depthBuf = c_float_array;
 
+    //获致obj中对象的class
+    jclass clazz = env->GetObjectClass(faceobj);
+    // 获取java中age字段的ID(最后一个参数是age的签名)
+    jfieldID id_x = env->GetFieldID(clazz, "x", "I");
+    jfieldID id_y = env->GetFieldID(clazz, "y", "I");
+    jfieldID id_width = env->GetFieldID(clazz, "width", "I");
+    jfieldID id_height = env->GetFieldID(clazz, "height", "I");
+    // 获取age字段对应的值
+    jint x = env->GetIntField(faceobj, id_x);
+    jint y = env->GetIntField(faceobj, id_y);
+    jint width = env->GetIntField(faceobj, id_width);
+    jint height = env->GetIntField(faceobj, id_height);
     faceRectMy s;
     s.x = x;
     s.y = y;
@@ -75,66 +88,6 @@ Java_com_example_testndk_JniTest_stereoInterface(
     return result;
 }
 
-extern "C" JNIEXPORT jint JNICALL
-Java_com_example_testndk_JniTest_stereoInterface2(
-        JNIEnv *env,
-        jobject/* this */,
-        jbyteArray right,
-        jbyteArray left,
-        jfloatArray depth,
-        jint x,
-        jint y,
-        jint width,
-        jint height,
-        jboolean isShort) {
-
-    jbyte *c_right_array;
-    jbyte *c_left_array;
-    jfloat *c_float_array;
-    jint len_arr;
-    jint len_float_arr;
-    //1. 获取数组长度
-    len_arr = env->GetArrayLength(right);
-    len_float_arr = env->GetArrayLength(depth);
-    //2. 申请缓冲区
-    c_right_array = (jbyte *) malloc(sizeof(jbyte) * len_arr);
-    c_left_array = (jbyte *) malloc(sizeof(jbyte) * len_arr);
-    c_float_array = (jfloat *) malloc(sizeof(jfloat) * len_float_arr);
-    //3. 初始化缓冲区
-    memset(c_right_array, 0, sizeof(jbyte) * len_arr);
-    memset(c_left_array, 0, sizeof(jbyte) * len_arr);
-    memset(c_float_array, 0, sizeof(jfloat) * len_float_arr);
-
-//    4. 拷贝java数组数据
-    env->GetByteArrayRegion(right, 0, len_arr, c_right_array);
-    unsigned char *rightBuf = (unsigned char *) c_right_array;
-
-//    LOGD("printf log 255508 = %d",rightBuf[255508]);
-//    LOGD("printf log 255509 = %d",rightBuf[255509]);
-//    LOGD("printf log 255510 = %d",rightBuf[255510]);
-//    LOGD("printf log 255511 = %d",rightBuf[255511]);
-
-    env->GetByteArrayRegion(left, 0, len_arr, c_left_array);
-    unsigned char *leftBuf = (unsigned char *) c_left_array;
-
-    env->GetFloatArrayRegion(depth, 0, len_arr, c_float_array);
-    float *depthBuf = c_float_array;
-
-    faceRectMy s;
-    s.x = x;
-    s.y = y;
-    s.width = width;
-    s.height = height;
-
-    jint result = stereo_interface(rightBuf, leftBuf, depthBuf, s,isShort);
-    env->SetFloatArrayRegion(depth, 0, len_float_arr, c_float_array);  //设置输出值
-
-    //5. 释放资源
-    free(c_right_array);
-    free(c_left_array);
-    free(c_float_array);
-    return result;
-}
 
 extern "C" JNIEXPORT jint JNICALL
 Java_com_example_testndk_JniTest_temperWarpInterface(
@@ -193,16 +146,6 @@ Java_com_example_testndk_JniTest_temperWarpInterface(
     env->GetByteArrayRegion(mapy, 0, len_mapy_arr, c_mapy_array);
     unsigned char *mapyBuf = (unsigned char *) c_mapy_array;
 
-//    temper_warp_interface(inputBuf,outBuf,mapxBuf,mapyBuf,width,height,temperature,temp_stand,temp_max,temp_min);
-//    env->SetByteArrayRegion(output, 0, len_input_arr, c_output_array);  //设置输出值
-//
-//    if ((env)->ExceptionCheck()) {  // 检查JNI调用是否有引发异常
-//        (env)->ExceptionDescribe();
-//        (env)->ExceptionClear();        // 清除引发的异常，在Java层不会打印异常的堆栈信息
-//        result = 1;
-//        LOGD("Result : 数组越界异常了！！");
-//        //return;
-//    }
 
     try {
         temper_warp_interface(inputBuf,outBuf,mapxBuf,mapyBuf,width,height,temperature,temp_stand,temp_max,temp_min);

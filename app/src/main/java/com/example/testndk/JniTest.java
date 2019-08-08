@@ -1,5 +1,7 @@
 package com.example.testndk;
 
+import com.example.testndk.bean.FaceRectIn;
+
 public class JniTest {
 
     // Used to load the 'native-lib' library on application startup.
@@ -13,8 +15,8 @@ public class JniTest {
      */
     public static native String goobeeStringFromJNI();
 
-    public static native int stereoInterface(byte[]right,byte[]left,float[]depth,int x,int y,int width,int height);
-    public static native int stereoInterface2(byte[]right,byte[]left,float[]depth,int x,int y,int width,int height,boolean isShort);
+    public static native int stereoInterface(byte[]right, byte[]left, float[]depth, FaceRectIn faceRectIn);
+//    public static native int stereoInterface2(byte[]right,byte[]left,float[]depth,int x,int y,int width,int height,boolean isShort);
 
     public static native int temperWarpInterface(byte[]input,byte[]output,byte[]mapx,byte[]mapy,int width,int height,float temperature,float temp_stand,float temp_max,float temp_min);
 //    public native int stereoInterface(int x,int y,int width,int height);
